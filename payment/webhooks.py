@@ -1,0 +1,43 @@
+# Using webhooks, Stripe can send an HTTP request to a URL of our application to notify of successful payments in real time.
+# We build a webhook endpoint to receive Stripe events.
+# The webhook will consist of a view that will receive a JSON payload with the event information to process it.
+# We will use the event information to mark orders as paid when the checkout session is successfully completed.
+
+# Stripe signs the webhook events it sends to your endpoints by including a Stripe-Signature header with a signature in each event.
+
+import stripe
+from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from orders.models import Order
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            sig_header,
+            settings.STRIPE_WEBHOOK_SECRET)
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    if event.type == 'checkout.session.completed':
+        session = event.data.object
+        if session.mode == 'payment' and session.payment_status == 'paid':
+            try:
+                order = Order.objects.get(id=session.client_reference_id)
+            except Order.DoesNotExist:
+                return HttpResponse(status=404)
+            # mark order as paid
+            order.paid = True
+            order.save()
+
+    return HttpResponse(status=200)
