@@ -4,31 +4,43 @@
 
 # 2- Steps to start the project on your machine.
 
-### Project Features:
+### 1- Project Features:
 
--
+- Shopping Cart.
 
-### Steps to start the project on your machine:
+- Storing carts in sessions `For more performance`.
 
-- `Start a virtual environment`:
+- Using `cotext processor` for the cart and order_id.
 
-  - python -m venv env/myshop
+- Asynchronous tasks using `Celery & Redis`.
 
-- `Open the virtual environment`:
+- Integrating a payment gateway using `Stripe API`.
 
-  - .\env\myshop\Scripts\activate
+- A simple recommendation system using `Redis` that recommends products that have been bought with the product you want.
 
-- `Install all the requirements`:
+- A coupon system. after using the coupon it will be stored in the session.
 
-  - pip install -r requirements.txt
+### 2- Steps to start the project on your machine:
 
-- `Start redis server to be able to start celery (redis is a message broker)`:
+- Start a virtual environment:
 
-  - redis-server
+  - `python -m venv env/myshop`
 
-- `Start celery worker`:
+- Open the virtual environment:
 
-  - celery -A myshop worker -l info -P gevent
+  - `.\env\myshop\Scripts\activate`
+
+- Install all the requirements:
+
+  - `pip install -r requirements.txt`
+
+- Start redis server to be able to start celery (redis is a message broker):
+
+  - `redis-server`
+
+- Start celery worker:
+
+  - `celery -A myshop worker -l info -P gevent`
 
 ## Config settings.py:
 
