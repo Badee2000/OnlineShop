@@ -1,9 +1,9 @@
-### In this readme file there are:
+### In this readme file:
 
 # 1- Project features.
-
 # 2- Steps to start the project on your machine.
 
+**Note: Rememer to flush the database if wanted, and create your own data :)**
 ### 1- Project Features:
 
 - Shopping Cart.
